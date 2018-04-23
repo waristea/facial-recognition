@@ -19,7 +19,7 @@ def login():
             print(request.form['password'])
 
             user = User.query.filter_by(email=request.form['email']).first()
-            password = request.form['password'].encode("utf-8")
+            password = request.form['password']
 
             if user and bcrypt.check_password_hash(user.password, password):
                 print("Logged in!")
