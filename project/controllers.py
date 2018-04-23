@@ -15,8 +15,10 @@ def login():
         from project import bcrypt
 
         if request.form['email'] != None and request.form['password'] != None:
+            print(request.form['email'])
+
             user = User.query.filter_by(email=request.form['email']).first()
-            password = request.form['password']
+            password = request.form['password'].encode("utf-8")
 
             if user and bcrypt.check_password_hash(user.password, password):
                 print("Logged in!")
