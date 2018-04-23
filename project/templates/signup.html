@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IMKA - Sign Up</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style></style>
+  </head>
+  <body>
+    <script></script>
+    Add Admin
+    {% block body %}
+    <form action="/signup" method="POST">
+        <label>Name</label>
+        <input type="name" name="name" placeholder="Name">
+        <br>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Email">
+        <br>
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Password">
+        <br>
+      <input type="submit" value="Add">
+    </form>
+    {% endblock %}
+  </body>
+</html>
