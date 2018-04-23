@@ -12,7 +12,7 @@ def login():
     if request.method=='POST':
         # check login credentials
         from project.models import User
-        from project import bcrypt
+        from werkzeug import check_password_hash
 
         if request.form['email'] != None and request.form['password'] != None:
             print(request.form['email'])
@@ -21,7 +21,7 @@ def login():
             user = User.query.filter_by(email=request.form['email']).first()
             password = request.form['password']
 
-            if user and bcrypt.check_password_hash(user.password, password):
+            if user and check_password_hash(user.password, password):
                 print("Logged in!")
                 session['logged_in']=True
             else:

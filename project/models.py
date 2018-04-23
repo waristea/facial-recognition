@@ -1,6 +1,7 @@
 # project/models.py
 import datetime
-from project import db, bcrypt
+from project import db
+from werkzeug import generate_password_hash
 
 class User(db.Model):
     __tablename__ = "users"
@@ -14,7 +15,7 @@ class User(db.Model):
 
     def __init__(self, email, password, name, admin=False):
         self.email = email
-        self.password = bcrypt.generate_password_hash(password)
+        self.password = generate_password_hash(password)
         self.name = name
         self.registered_on = datetime.datetime.now()
         self.admin = admin
