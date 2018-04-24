@@ -6,6 +6,8 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import Config
 from project import controllers
+from flask_login import LoginManager
+
 # config
 
 app = Flask(__name__)
@@ -14,6 +16,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# get current user
+@login_manager.user_loader
+def load_user(user_id):
+    from project.models import User
+    return User.query.get(int(user_id))
 
 # routes
 @app.route('/')

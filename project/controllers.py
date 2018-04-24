@@ -1,8 +1,10 @@
 #project/controllers.py
-from flask import flash, render_template, request, session
+from flask import flash, render_template, request, session, redirect, url_for
+from flask_login import current_user, login_user, logout_user
 
 def index():
-    if session.get('logged_in'):
+    if current_user.is_authenticated:
+        print(current_user.get_id())
         return render_template('dashboard.html')
     else:
         return render_template('login.html')
@@ -15,15 +17,12 @@ def login():
         from werkzeug import check_password_hash
 
         if request.form['email'] != None and request.form['password'] != None:
-            print(request.form['email'])
-            print(request.form['password'])
-
             user = User.query.filter_by(email=request.form['email']).first()
             password = request.form['password']
 
             if user and check_password_hash(user.password, password):
                 print("Logged in!")
-                session['logged_in']=True
+                login_user(user)
             else:
                 print("Log in credentials are false")
         else:
@@ -69,8 +68,9 @@ def register():
     return index()
 
 def logout():
+    logout_user()
     session.pop('logged_in', None)
-    return index()
+    return redirect(url_for('index'))
 
 # IoT related methods
 """

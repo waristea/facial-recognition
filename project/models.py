@@ -2,8 +2,9 @@
 import datetime
 from project import db
 from werkzeug import generate_password_hash
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -12,6 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    #presence = db.Column(db.ARRAY(WorkDay), nullable=False, default=False)
 
     def __init__(self, email, password, name, admin=False):
         self.email = email
@@ -20,6 +22,8 @@ class User(db.Model):
         self.registered_on = datetime.datetime.now()
         self.admin = admin
 
+    # UserMixin berisi fungsi ini semua,
+    # SEHARUSNYA tanpa definisi dibawah tetap bisa jalan
     def is_authenticated(self):
         return True
 
@@ -34,3 +38,39 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {0}>'.format(self.email)
+"""
+class WorkDay(db.Model):
+    __tablename__ = "presence"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_on = db.Column(db.DateTime, nullable=False)
+    updated_on = db.Column(db.DateTime, nullable=False)
+    time = db.Column(db.DateTime, nullable=True)
+    is_present = db.Column(db.Boolean, nullable=False)
+
+    def __init__(self, owner, time=datetime.datetime.now(), is_present=True,):
+        self.owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+        self.is_present = is_present
+        self.created_on = datetime.datetime.now()
+        self.updated_on = datetime.datetime.now()
+        self.time = time
+
+    def update_presence(self, is_present):
+        self.is_present = is_present
+        self.updated_on = datetime.datetime.now()
+
+    def update_time(self, time):
+        self.time = time
+        self.updated_on = datetime.datetime.now()
+
+    def update_owner(self, owner):
+        self.owner = owner
+        self.updated_on = datetime.datetime.now()
+
+    def get_id(self):
+        return self.id
+
+    def __repr__(self):
+        return '<WorkDay {0}>'.format(self.id)
+"""

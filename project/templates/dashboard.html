@@ -6,6 +6,9 @@
 </head>
 <body>
 You are logged in!
+{% if current_user.is_authenticated %}
+  Hi {{ current_user.name }}!
+{% endif %}
 <br>
 <a href="/logout"><button>Logout</button></a>
 <br>
