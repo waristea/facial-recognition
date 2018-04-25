@@ -43,6 +43,14 @@ def login():
 def logout():
     return controllers.logout()
 
+@app.route('/schedule', methods=['GET', 'POST'])
+def schedule():
+    return controllers.schedule()
+
+@app.route('/analytics', methods=['GET'])
+def analytics():
+    return controllers.analytics()
+
 # Untuk RekSTI - API CRUD
 # Create
 # Receive a create request from read (form is in the listing)
@@ -71,7 +79,6 @@ def api_request_update(presence_id):
 @app.route('/api/presence/<presence_id>', methods=['DELETE'])
 def api_request_delete(presence_id):
     return controllers.api_presence_delete(presence_id)
-
 
 # Untuk IMKA
 """

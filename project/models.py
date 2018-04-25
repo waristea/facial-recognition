@@ -44,6 +44,9 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return self.id
 
+    def get_name(self):
+        return self.name
+
     def __repr__(self):
         return '<User {0}>'.format(self.email)
 
@@ -75,7 +78,7 @@ class Presence(db.Model):
         presence_dict['created_on'] = self.created_on
         presence_dict['updated_on'] = self.updated_on
         presence_dict['time'] = self.time
-        return user_dict
+        return presence_dict
 
     def update_presence(self, is_present):
         self.is_present = is_present
@@ -112,7 +115,7 @@ class Schedule(db.Model):
     def __init__(self, owner, text, time=datetime.datetime.now()):
         self.owner = owner
         self.created_on = datetime.datetime.now()
-        self.updated_on = datetime.datetime.now()
+        self.update_on = datetime.datetime.now()
         self.text = text
         self.time = time
 
@@ -122,9 +125,10 @@ class Schedule(db.Model):
         schedule_dict = {}
         schedule_dict['owner'] = user.name
         schedule_dict['created_on'] = self.created_on
+        schedule_dict['updated_on'] = self.updated_on
         schedule_dict['text'] = self.text
         schedule_dict['time'] = self.time
-        return user_dict
+        return schedule_dict
 
     def update_text(self, text):
         self.text = text

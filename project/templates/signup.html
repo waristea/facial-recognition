@@ -1,27 +1,35 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>RekSTI - Sign Up</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<html lang="en">
+<head>
+    <title>RekSTI - Pegawai Baru</title>
     <meta charset="utf-8">
-    <style></style>
-  </head>
-  <body>
-    <script></script>
-    Add Admin
-    {% block body %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body style= "background-color: #00122e; color: #176a90">
+<div class="container">
+    <br>
+    <h2 style="text-align: center"> Add New Employee </h2>
+    <br>
     <form action="/signup" method="POST">
-        <label>Name</label>
-        <input type="name" name="name" placeholder="Name">
-        <br>
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Email">
-        <br>
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Password">
-        <br>
-      <input type="submit" value="Add">
+        <div class="form-group">
+            <label for="name">Nama Pegawai</label>
+            <input name="name" type="text" class="form-control" id="nama" placeholder="nama">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Pegawai</label>
+            <input name="email" type="text" class="form-control" id="email" placeholder="email">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary " name="submit" type="submit" >
+                Submit
+            </button>
+        </div>
     </form>
-    {% endblock %}
-  </body>
+</div>
+
+</body>
 </html>
