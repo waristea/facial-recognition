@@ -22,6 +22,14 @@ class User(UserMixin, db.Model):
         self.registered_on = datetime.datetime.now()
         self.admin = admin
 
+    def serialize(self):
+        import json
+
+        user_dict = {}
+        user_dict['email'] = self.email
+        user_dict['name'] = self.name
+        return json.dumps(user_dict)
+
     # UserMixin berisi fungsi ini semua,
     # SEHARUSNYA tanpa definisi dibawah tetap bisa jalan
     def is_authenticated(self):
@@ -52,7 +60,7 @@ class Presence(db.Model):
     is_present = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, owner, time=datetime.datetime.now(), is_present=True):
-        self.owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+        self.owner = owner
         self.is_present = is_present
         self.created_on = datetime.datetime.now()
         self.updated_on = datetime.datetime.now()

@@ -6,21 +6,23 @@ remote = "http://reksti.herokuapp.com"
 def test_api():
     path = ["/api/presence", "/api/presence/all"]
 
-    data = {'testing': 'It is a success'}
+    data = {}
+    data['owner'] = 'admin'
+
     headers = {'content-type': 'application/json'}
 
-    json = json.dumps(data).encode('utf8')
+    json_data = json.dumps(data).encode('utf8')
     url = local+path[0]
     method = 'POST'
 
-    req = urllib.request.Request(url, data=json, headers=headers, method=method)
+    req = urllib.request.Request(url, data=json_data, headers=headers, method=method)
     response = urllib.request.urlopen(req)
 
     print(response.read())
 
 def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
     import smtplib
-    
+
     header = 'From : ' + from_addr
     header += 'To : '
     header.join(to_addr_list)
@@ -50,4 +52,4 @@ def test_email():
 
 
 if __name__=="__main__":
-    test_email()
+    test_api()

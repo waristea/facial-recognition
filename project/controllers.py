@@ -86,11 +86,14 @@ def logout():
 # API
 # Create
 def api_presence_add():
-    from project import app
+    from project import app, db
+    from project.models import User, Presence
+
     print("Mark 0")
     json_data = request.get_json()
     print(json_data)
-    user_name = json["owner"]
+    user_name = json_data['owner']
+    print(user_name)
     user = User.query.filter_by(name=user_name).first()
 
     data = {}
@@ -99,11 +102,18 @@ def api_presence_add():
         print("Mark 2a")
         data['status'] = 'failed'
         data['message'] = 'person is not registered'
+
+        response = app.response_class(
+            response = json.dumps(data),
+            status=400,
+            mimetype='application/json'
+        )
     else:
         print("Mark 1b")
-        presence = Presence.query.filter_by(owner=user.id).first()
+        presence = Presence.query.filter_by(owner=user.get_id()).first()
         if (presence==None):
-            presence = Presence(user.id)
+            user_id = user.get_id()
+            presence = Presence(user_id)
             try:
                 print("Mark 2a")
 
@@ -121,7 +131,7 @@ def api_presence_add():
 
                 data['status'] = 'successful'
                 data['message'] = 'user is marked as present'
-                data['user'] = jsonify(user)
+                data['user'] = user.serialize()
 
             except Exception as e:
                 print("Mark 2b")
@@ -134,15 +144,15 @@ def api_presence_add():
 
             data['status'] = 'successful'
             data['message'] = 'user has already been marked as present'
-            data['user'] = jsonify(user)
+            data['user'] = user.serialize()
 
+        response = app.response_class(
+            response = json.dumps(data),
+            status=200,
+            mimetype='application/json'
+        )
     print("Yes")
 
-    response = app.response_class(
-        response = json.dumps(data),
-        status=200,
-        mimetype='application/json'
-    )
     return response
 # Read
 def api_presence_all():
