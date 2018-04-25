@@ -1,6 +1,5 @@
 import json
 import urllib.request
-from project.controllers import send_email
 
 local = "http://127.0.0.1:5000"
 remote = "http://reksti.herokuapp.com"
@@ -19,6 +18,26 @@ def test_api():
 
     print(response.read())
 
+def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
+    import smtplib
+    
+    header = 'From : ' + from_addr
+    header += 'To : '
+    header.join(to_addr_list)
+    header += 'Subject : ' + subject
+
+    message = header + body
+    # SMTP_SSL Example
+    server_ssl = smtplib.SMTP("smtp.gmail.com", 587)
+    server_ssl.ehlo() # optional, called by login()
+    server_ssl.starttls()
+    server_ssl.login(from_addr, gmail_password)
+    # ssl server doesn't support or need tls, so don't call server_ssl.starttls()
+    server_ssl.sendmail(from_addr, to_addr_list, message)
+    #server_ssl.quit()
+    server_ssl.quit()
+    print('successfully sent the mail')
+
 def test_email():
     gmail_user = "waristea@gmail.com"
     gmail_password = "uubcprkertzvurnv"
@@ -26,8 +45,9 @@ def test_email():
     to = ["winaldojuan@gmail.com", "waristea@gmail.com"]
     subject = "Wibu"
     body = "Testing"
-
     send_email(gmail_user, to, subject, body, gmail_password)
+
+
 
 if __name__=="__main__":
     test_email()

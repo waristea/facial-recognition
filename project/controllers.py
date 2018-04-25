@@ -178,27 +178,24 @@ def api_presence_delete(presence_id):
 
 # Gunakan password dan username yagn disediakan google
 def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
+    import smtplib
+
     header = 'From : ' + from_addr
     header += 'To : '
     header.join(to_addr_list)
     header += 'Subject : ' + subject
 
     message = header + body
-
-    server = smtplib.SMTP(smtp_server)
-
-    try:
-        print("1")
-        server = smtplib.SMTP_SSL(smtp_server, port)
-        print("2")
-        server.login()
-        print("3")
-        server.sendmail(from_addr, to_addr_list, message)
-        print("4")
-        server.close()
-    except:
-        print("Error Occured")
-    return
+    # SMTP_SSL Example
+    server_ssl = smtplib.SMTP("smtp.gmail.com", 587)
+    server_ssl.ehlo() # optional, called by login()
+    server_ssl.starttls()
+    server_ssl.login(from_addr, gmail_password)
+    # ssl server doesn't support or need tls, so don't call server_ssl.starttls()
+    server_ssl.sendmail(from_addr, to_addr_list, message)
+    #server_ssl.quit()
+    server_ssl.quit()
+    print('successfully sent the mail')
 
 # Untuk IMKA
 # IoT related methods
