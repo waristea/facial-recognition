@@ -99,7 +99,7 @@ def api_presence_add():
         data['status'] = 'failed'
         data['message'] = 'person is not registered'
     else:
-        presence = Workday.query.filter_by(owner=user.id).first()
+        presence = Presence.query.filter_by(owner=user.id).first()
         if (presence==None):
             presence = Presence(user.id)
             try:
