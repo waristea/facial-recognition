@@ -87,22 +87,26 @@ def logout():
 # Create
 def api_presence_add():
     from project import app
-
+    print("Mark 0")
     json_data = request.get_json()
     print(json_data)
     user_name = json["owner"]
     user = User.query.filter_by(name=user_name).first()
 
     data = {}
-
+    print("Mark 1")
     if user==None:
+        print("Mark 2a")
         data['status'] = 'failed'
         data['message'] = 'person is not registered'
     else:
+        print("Mark 1b")
         presence = Presence.query.filter_by(owner=user.id).first()
         if (presence==None):
             presence = Presence(user.id)
             try:
+                print("Mark 2a")
+
                 db.session.add(presence)
                 db.session.commit()
 
@@ -120,14 +124,19 @@ def api_presence_add():
                 data['user'] = jsonify(user)
 
             except Exception as e:
+                print("Mark 2b")
                 data['status'] = 'failed'
                 data['message'] = 'expection occured, please contact admin'
-                print(status)
+                print(e)
             db.session.close()
         else:
+            print("Mark 2c")
+
             data['status'] = 'successful'
             data['message'] = 'user has already been marked as present'
             data['user'] = jsonify(user)
+
+    print("Yes")
 
     response = app.response_class(
         response = json.dumps(data),
