@@ -69,12 +69,12 @@ class Presence(db.Model):
     def get_dict(self):
         user = User.query.get(self.owner)
 
-        user_dict = {}
-        user_dict['owner'] = user.name
-        user_dict['is_present'] = self.is_present
-        user_dict['created_on'] = self.created_on
-        user_dict['updated_on'] = self.updated_on
-        user_dict['time'] = self.time
+        presence_dict = {}
+        presence_dict['owner'] = user.name
+        presence_dict['is_present'] = self.is_present
+        presence_dict['created_on'] = self.created_on
+        presence_dict['updated_on'] = self.updated_on
+        presence_dict['time'] = self.time
         return user_dict
 
     def update_presence(self, is_present):
@@ -95,4 +95,51 @@ class Presence(db.Model):
     def __repr__(self):
         return '<WorkDay {0}>'.format(self.id)
 
-# nanti buat jadwal juga
+
+
+# Cuma ide, gk yakin jalan
+# Tolong dites untuk masuk dan keluar datanya
+class Schedule(db.Model):
+    __tablename__ = "schedule"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_on = db.Column(db.Date, nullable=False)
+    update_on = db.Column(db.DateTime, nullable=False)
+    text = db.Column(db.String, nullable=True)
+    time = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, owner, text, time=datetime.datetime.now()):
+        self.owner = owner
+        self.created_on = datetime.datetime.now()
+        self.updated_on = datetime.datetime.now()
+        self.text = text
+        self.time = time
+
+    def get_dict(self):
+        user = User.query.get(self.owner)
+
+        schedule_dict = {}
+        schedule_dict['owner'] = user.name
+        schedule_dict['created_on'] = self.created_on
+        schedule_dict['text'] = self.text
+        schedule_dict['time'] = self.time
+        return user_dict
+
+    def update_text(self, text):
+        self.text = text
+        self.updated_on = datetime.datetime.now()
+
+    def update_time(self, time):
+        self.time = time
+        self.updated_on = datetime.datetime.now()
+
+    def update_owner(self, owner):
+        self.owner = owner
+        self.updated_on = datetime.datetime.now()
+
+    def get_id(self):
+        return self.id
+
+    def __repr__(self):
+        return '<Schedule {0}>'.format(self.id)
