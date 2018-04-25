@@ -15,7 +15,7 @@ def test_api():
     url = local+path[0]
     method = 'POST'
 
-    req = urllib.request.Request(url, data=json_data, headers=headers, method=method)
+    req = urllib.request.Request(remote, data=json_data, headers=headers, method=method)
     response = urllib.request.urlopen(req)
 
     print(response.read())
