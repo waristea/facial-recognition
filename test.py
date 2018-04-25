@@ -12,7 +12,7 @@ def test_api():
     headers = {'content-type': 'application/json'}
 
     json_data = json.dumps(data).encode('utf8')
-    url = remote+path[0]
+    url = local+path[0]
     print(url)
     method = 'POST'
 
@@ -24,7 +24,7 @@ def test_api():
 def test_api_presence_today():
     path = ["/api/presence/today"]
 
-    url = local+path[0]
+    url = remote+path[0]
     print(url)
     method = 'GET'
 
@@ -66,4 +66,4 @@ def test_email():
 
 
 if __name__=="__main__":
-    test_api_presence_today()
+    test_api()

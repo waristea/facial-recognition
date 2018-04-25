@@ -106,10 +106,10 @@ def api_presence_add():
             mimetype='application/json'
         )
     else:
-        print("Mark 1b")
-        presence = Presence.query.filter_by(owner=user.get_id()).last()
-        #if (presence==None or presence.time.date!=datetime.datetime.now().date):
-        if (presence==None):
+        presence = Presence.query.filter_by(owner=user.get_id()).order_by(Presence.time.desc()).first()
+        today = datetime.datetime.now().date
+
+        if (presence==None or presence.time.date!=today):
             user_id = user.get_id()
             presence = Presence(user_id)
             try:
