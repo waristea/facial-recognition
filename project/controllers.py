@@ -345,12 +345,13 @@ def api_presence_delete(presence_id):
 def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
     import smtplib
     from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
 
     msg = MIMEMultipart()
     msg['From'] = from_addr
     msg['To'] = to_addr_list[0]
     msg['Subject'] = "SUBJECT"
-    msg.preamble = body
+    msg.attach(MIMEText(body, 'plain'))
 
     # SMTP_SSL Example
     server_ssl = smtplib.SMTP("smtp.gmail.com", 587)

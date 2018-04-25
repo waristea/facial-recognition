@@ -36,12 +36,13 @@ def test_api_presence_today():
 def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
     import smtplib
     from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
 
     msg = MIMEMultipart()
     msg['From'] = from_addr
     msg['To'] = to_addr_list[0]
     msg['Subject'] = "SUBJECT"
-    msg.preamble = body
+    msg.attach(MIMEText(body, 'plain'))
 
     # SMTP_SSL Example
     server_ssl = smtplib.SMTP("smtp.gmail.com", 587)
@@ -58,7 +59,7 @@ def test_email():
     gmail_user = "waristea@gmail.com"
     gmail_password = "uubcprkertzvurnv"
 
-    to = ["winaldojuan@gmail.com", "waristea@gmail.com"]
+    to = ["waristea@gmail.com"]
     subject = "Wibu"
     body = "Testing"
     send_email(gmail_user, to, subject, body, gmail_password)
@@ -66,4 +67,4 @@ def test_email():
 
 
 if __name__=="__main__":
-    test_api()
+    test_email()
