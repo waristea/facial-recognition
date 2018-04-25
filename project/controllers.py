@@ -88,18 +88,15 @@ def logout():
 def api_presence_add():
     from project import app, db
     from project.models import User, Presence
+    import datetime
 
-    print("Mark 0")
     json_data = request.get_json()
     print(json_data)
     user_name = json_data['owner']
-    print(user_name)
     user = User.query.filter_by(name=user_name).first()
 
     data = {}
-    print("Mark 1")
     if user==None:
-        print("Mark 2a")
         data['status'] = 'failed'
         data['message'] = 'person is not registered'
 
@@ -110,12 +107,12 @@ def api_presence_add():
         )
     else:
         print("Mark 1b")
-        presence = Presence.query.filter_by(owner=user.get_id()).first()
+        presence = Presence.query.filter_by(owner=user.get_id()).last()
+        #if (presence==None or presence.time.date!=datetime.datetime.now().date):
         if (presence==None):
             user_id = user.get_id()
             presence = Presence(user_id)
             try:
-                print("Mark 2a")
 
                 db.session.add(presence)
                 db.session.commit()
@@ -134,13 +131,11 @@ def api_presence_add():
                 data['user'] = user.serialize()
 
             except Exception as e:
-                print("Mark 2b")
                 data['status'] = 'failed'
                 data['message'] = 'expection occured, please contact admin'
                 print(e)
             db.session.close()
         else:
-            print("Mark 2c")
 
             data['status'] = 'successful'
             data['message'] = 'user has already been marked as present'
@@ -155,16 +150,24 @@ def api_presence_add():
 
     return response
 # Read
-def api_presence_all():
-    from project import app
-
+def api_presence_today():
+    from project import app, db
+    from project.models import Presence
+    from sqlalchemy import Date, cast
+    import datetime
     #json_data = request.get_json()
     #print(json_data)# Seharusnya gk ada
+    o_presence_list = db.session.query(Presence).filter(cast(Presence.time,Date) == datetime.date.today()).all()
 
-    data = {'status' : 'successful'}
+    presence_list = []
+
+    for p in o_presence_list:
+        presence_list.append(p.get_dict())
+
+    print(presence_list)
 
     response = app.response_class(
-        response = json.dumps(data),
+        response = json.dumps(presence_list),
         status=200,
         mimetype='application/json'
     )
@@ -172,9 +175,12 @@ def api_presence_all():
 
 def api_presence_detail_by_user(user_id):
     from project import app
+    from datetime import date
 
     #json_data = request.get_json()
     #print(json_data)
+
+
 
     data = {'status' : 'successful'}
 
@@ -234,54 +240,21 @@ def api_presence_delete(presence_id):
 # Gunakan password dan username yagn disediakan google
 def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
     import smtplib
+    from email.mime.multipart import MIMEMultipart
 
-    header = 'From : ' + from_addr
-    header += 'To : '
-    header.join(to_addr_list)
-    header += 'Subject : ' + subject
+    msg = MIMEMultipart()
+    msg['From'] = from_addr
+    msg['To'] = to_addr_list[0]
+    msg['Subject'] = "SUBJECT"
+    msg.preamble = body
 
-    message = header + body
     # SMTP_SSL Example
     server_ssl = smtplib.SMTP("smtp.gmail.com", 587)
     server_ssl.ehlo() # optional, called by login()
     server_ssl.starttls()
     server_ssl.login(from_addr, gmail_password)
     # ssl server doesn't support or need tls, so don't call server_ssl.starttls()
-    server_ssl.sendmail(from_addr, to_addr_list, message)
+    server_ssl.sendmail(from_addr, to_addr_list, msg.as_string())
     #server_ssl.quit()
     server_ssl.quit()
     print('successfully sent the mail')
-
-# Untuk IMKA
-# IoT related methods
-# Request
-# Create
-def request_form():
-    print('request form is reached')
-    return index()
-
-def request_add():
-    print('request add is reached')
-    return index()
-
-# Read
-def request_all():
-    print('detail request is reached')
-    return index()
-
-def request_detail(request_id):
-    print(request_id)
-    print('detail request is reached')
-    return index()
-
-# Update
-def request_update(request_id):
-    print(request_id)
-    print('request update is reached')
-    return index()
-
-# Delete
-def request_delete(request_id):
-    print(request_id)
-    print('request delete is reached')
-    return index()

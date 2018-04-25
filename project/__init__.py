@@ -50,10 +50,10 @@ def logout():
 def request_add():
     return controllers.api_presence_add()
 # Read
-# - All : Show list of presence (and create new request right there in the form)
-@app.route('/api/presence/all', methods=['GET'])
-def api_request_all():
-    return controllers.api_presence_all()
+# - Today : Show list of presence (and create new request right there in the form)
+@app.route('/api/presence/today', methods=['GET'])
+def api_request_today():
+    return controllers.api_presence_today()
 # - Detail : Show a presence detail
 @app.route('/api/presence/<user_id>', methods=['GET'])
 def api_request_detail_by_user(user_id):

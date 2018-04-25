@@ -12,30 +12,44 @@ def test_api():
     headers = {'content-type': 'application/json'}
 
     json_data = json.dumps(data).encode('utf8')
-    url = local+path[0]
+    url = remote+path[0]
+    print(url)
     method = 'POST'
 
-    req = urllib.request.Request(remote, data=json_data, headers=headers, method=method)
+    req = urllib.request.Request(url, data=json_data, headers=headers, method=method)
+    response = urllib.request.urlopen(req)
+
+    print(response.read())
+
+def test_api_presence_today():
+    path = ["/api/presence/today"]
+
+    url = local+path[0]
+    print(url)
+    method = 'GET'
+
+    req = urllib.request.Request(url, method=method)
     response = urllib.request.urlopen(req)
 
     print(response.read())
 
 def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
     import smtplib
+    from email.mime.multipart import MIMEMultipart
 
-    header = 'From : ' + from_addr
-    header += 'To : '
-    header.join(to_addr_list)
-    header += 'Subject : ' + subject
+    msg = MIMEMultipart()
+    msg['From'] = from_addr
+    msg['To'] = to_addr_list[0]
+    msg['Subject'] = "SUBJECT"
+    msg.preamble = body
 
-    message = header + body
     # SMTP_SSL Example
     server_ssl = smtplib.SMTP("smtp.gmail.com", 587)
     server_ssl.ehlo() # optional, called by login()
     server_ssl.starttls()
     server_ssl.login(from_addr, gmail_password)
     # ssl server doesn't support or need tls, so don't call server_ssl.starttls()
-    server_ssl.sendmail(from_addr, to_addr_list, message)
+    server_ssl.sendmail(from_addr, to_addr_list, msg.as_string())
     #server_ssl.quit()
     server_ssl.quit()
     print('successfully sent the mail')
@@ -52,4 +66,4 @@ def test_email():
 
 
 if __name__=="__main__":
-    test_api()
+    test_api_presence_today()

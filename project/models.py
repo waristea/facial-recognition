@@ -66,6 +66,17 @@ class Presence(db.Model):
         self.updated_on = datetime.datetime.now()
         self.time = time
 
+    def get_dict(self):
+        user = User.query.get(self.owner)
+
+        user_dict = {}
+        user_dict['owner'] = user.name
+        user_dict['is_present'] = self.is_present
+        user_dict['created_on'] = self.created_on
+        user_dict['updated_on'] = self.updated_on
+        user_dict['time'] = self.time
+        return user_dict
+
     def update_presence(self, is_present):
         self.is_present = is_present
         self.updated_on = datetime.datetime.now()
