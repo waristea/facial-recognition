@@ -125,7 +125,7 @@ class Schedule(db.Model):
         schedule_dict = {}
         schedule_dict['owner'] = user.name
         schedule_dict['created_on'] = self.created_on
-        schedule_dict['updated_on'] = self.updated_on
+        schedule_dict['update_on'] = self.update_on
         schedule_dict['text'] = self.text
         schedule_dict['time'] = self.time
         return schedule_dict
