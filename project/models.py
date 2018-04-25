@@ -41,7 +41,7 @@ class User(UserMixin, db.Model):
 
 # Cuma ide, gk yakin jalan
 # Tolong dites untuk masuk dan keluar datanya
-class WorkDay(db.Model):
+class Presence(db.Model):
     __tablename__ = "presence"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

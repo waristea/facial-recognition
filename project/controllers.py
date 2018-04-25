@@ -1,5 +1,5 @@
 #project/controllers.py
-from flask import flash, render_template, request, session, redirect, url_for, json
+from flask import flash, render_template, request, session, redirect, url_for, json, jsonify
 from flask_login import current_user, login_user, logout_user
 import smtplib
 
@@ -90,8 +90,44 @@ def api_presence_add():
 
     json_data = request.get_json()
     print(json_data)
+    user_name = json["owner"]
+    user = User.query.filter_by(name=user_name).first()
 
-    data = {'status' : 'successful'}
+    data = {}
+
+    if user==None:
+        data['status'] = 'failed'
+        data['message'] = 'person is not registered'
+    else:
+        presence = Workday.query.filter_by(owner=user.id).first()
+        if (presence==None):
+            presence = Presence(user.id)
+            try:
+                db.session.add(presence)
+                db.session.commit()
+
+                gmail_user = "waristea@gmail.com"
+                gmail_password = "uubcprkertzvurnv"
+
+                to = [user.email]
+                subject = "Notification"
+                body = "You are marked as present. Here are your schedules: sdfsaff"
+
+                send_email(gmail_user, to, subject, body, gmail_password)
+
+                data['status'] = 'successful'
+                data['message'] = 'user is marked as present'
+                data['user'] = jsonify(user)
+
+            except Exception as e:
+                data['status'] = 'failed'
+                data['message'] = 'expection occured, please contact admin'
+                print(status)
+            db.session.close()
+        else:
+            data['status'] = 'successful'
+            data['message'] = 'user has already been marked as present'
+            data['user'] = jsonify(user)
 
     response = app.response_class(
         response = json.dumps(data),
