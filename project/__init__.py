@@ -42,6 +42,38 @@ def login():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     return controllers.logout()
+
+# Untuk RekSTI - API CRUD
+# Create
+# Receive a create request from read (form is in the listing)
+@app.route('/api/presence', methods=['POST'])
+def request_add():
+    return controllers.api_presence_add()
+# Read
+# - All : Show list of presence (and create new request right there in the form)
+@app.route('/api/presence/all', methods=['GET'])
+def api_request_all():
+    return controllers.api_presence_all()
+# - Detail : Show a presence detail
+@app.route('/api/presence/<user_id>', methods=['GET'])
+def api_request_detail_by_user(user_id):
+    return controllers.api_presence_detail_by_user(user_id)
+@app.route('/api/presence/<presence_id>', methods=['GET'])
+def api_request_detail_by_id(presence_id):
+    return controllers.api_presence_detail_by_id(presence_id)
+# Update
+# POST : Change the details of the presence made (i.e. Change)
+@app.route('/api/presence/<presence_id>', methods=['POST'])
+def api_request_update(presence_id):
+    return controllers.api_presence_update(presence_id)
+# Delete
+# POST : Delete a presence
+@app.route('/api/presence/<presence_id>', methods=['DELETE'])
+def api_request_delete(presence_id):
+    return controllers.api_presence_delete(presence_id)
+
+
+# Untuk IMKA
 """
 # Request CRUD
 # Create

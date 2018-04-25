@@ -1,6 +1,13 @@
 #project/controllers.py
-from flask import flash, render_template, request, session, redirect, url_for
+from flask import flash, render_template, request, session, redirect, url_for, json
 from flask_login import current_user, login_user, logout_user
+import smtplib
+
+# Reminder:
+# - Buat jadwal
+# - Query user based on name
+# - Implement absen ke api
+# - Buat form input (banyak..)
 
 def index():
     if current_user.is_authenticated:
@@ -21,8 +28,11 @@ def login():
             password = request.form['password']
 
             if user and check_password_hash(user.password, password):
-                print("Logged in!")
-                login_user(user)
+                if user.admin:
+                    print("Logged in!")
+                    login_user(user)
+                else:
+                    print("Credentials true, but not an admin")
             else:
                 print("Log in credentials are false")
         else:
@@ -72,44 +82,126 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('index'))
 
+# Untuk RekSTI
+# API
+# Create
+def api_presence_add():
+    from project import app
+
+    json_data = request.get_json()
+    print(json_data)
+
+    data = {'status' : 'successful'}
+
+    response = app.response_class(
+        response = json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+# Read
+def api_presence_all():
+    from project import app
+
+    #json_data = request.get_json()
+    #print(json_data)# Seharusnya gk ada
+
+    data = {'status' : 'successful'}
+
+    response = app.response_class(
+        response = json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+def api_presence_detail_by_user(user_id):
+    from project import app
+
+    #json_data = request.get_json()
+    #print(json_data)
+
+    data = {'status' : 'successful'}
+
+    response = app.response_class(
+        response = json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+def api_presence_detail_by_id(presence_id):
+    from project import app
+
+    #json_data = request.get_json()
+    #print(json_data)
+
+    data = {'status' : 'successful'}
+
+    response = app.response_class(
+        response = json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+# Update
+def api_presence_update(presence_id):
+    from project import app
+
+    json_data = request.get_json()
+    print(json_data)
+
+    data = {'status' : 'successful'}
+
+    response = app.response_class(
+        response = json.dumps(data),
+        status = 200,
+        mimetype='application/json'
+    )
+    return response
+
+# Delete
+def api_presence_delete(presence_id):
+    from project import app
+
+    json_data = request.get_json()
+    print(json_data)
+
+    data = {'status' : 'successful'}
+
+    response = app.response_class(
+        response = json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+# Gunakan password dan username yagn disediakan google
+def send_email(from_addr, to_addr_list, subject, body, gmail_password, smtp_server = 'smtp.gmail.com', port = 465):
+    header = 'From : ' + from_addr
+    header += 'To : '
+    header.join(to_addr_list)
+    header += 'Subject : ' + subject
+
+    message = header + body
+
+    server = smtplib.SMTP(smtp_server)
+
+    try:
+        print("1")
+        server = smtplib.SMTP_SSL(smtp_server, port)
+        print("2")
+        server.login()
+        print("3")
+        server.sendmail(from_addr, to_addr_list, message)
+        print("4")
+        server.close()
+    except:
+        print("Error Occured")
+    return
+
+# Untuk IMKA
 # IoT related methods
-"""
-def open_req_create():
-    print("Entered Create")
-    return flash("Not yet implemented")
-
-def open_req_read(id):
-    print("Entered Read. Id : " + id)
-    return flash("Not yet implemented")
-
-def open_req_update(id):
-    print("Entered Update. Id : " + id)
-    return flash("Not yet implemented")
-
-def open_req_delete(id):
-    print("Entered Delete. Id : " + id)
-    return flash("Not yet implemented")
-"""
-# API crud
-"""
-def api_create():
-    print("Entered Create. Id : " + id)
-    return flash("Not yet implemented")
-
-def api_read(id):
-    print("Entered Read. Id : " + id)
-    return flash("Not yet implemented")
-
-def api_update(id):
-    print("Entered Update. Id : " + id)
-    return flash("Not yet implemented")
-
-def api_delete(id):
-    print("Entered Delete. Id : " + id)
-    return flash("Not yet implemented")
-"""
-# send_email():
-
 # Request
 # Create
 def request_form():
@@ -138,34 +230,6 @@ def request_update(request_id):
 
 # Delete
 def request_delete(request_id):
-    print(request_id)
-    print('request delete is reached')
-    return index()
-
-# API
-# Create
-def api_request_add():
-    print('request add is reached')
-    return index()
-
-# Read
-def api_request_all():
-    print('detail request is reached')
-    return index()
-
-def api_request_detail(request_id):
-    print(request_id)
-    print('detail request is reached')
-    return index()
-
-# Update
-def api_request_update(request_id):
-    print(request_id)
-    print('request update is reached')
-    return index()
-
-# Delete
-def api_request_delete(request_id):
     print(request_id)
     print('request delete is reached')
     return index()

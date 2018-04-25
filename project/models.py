@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
-    #presence = db.Column(db.ARRAY(WorkDay), nullable=False, default=False)
+    #presence = db.Column(db.ARRAY(WorkDay), nullable=True)
 
     def __init__(self, email, password, name, admin=False):
         self.email = email
@@ -38,18 +38,20 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {0}>'.format(self.email)
-"""
+
+# Cuma ide, gk yakin jalan
+# Tolong dites untuk masuk dan keluar datanya
 class WorkDay(db.Model):
     __tablename__ = "presence"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_on = db.Column(db.DateTime, nullable=False)
     updated_on = db.Column(db.DateTime, nullable=False)
     time = db.Column(db.DateTime, nullable=True)
     is_present = db.Column(db.Boolean, nullable=False)
 
-    def __init__(self, owner, time=datetime.datetime.now(), is_present=True,):
+    def __init__(self, owner, time=datetime.datetime.now(), is_present=True):
         self.owner = db.Column(db.Integer, db.ForeignKey('user.id'))
         self.is_present = is_present
         self.created_on = datetime.datetime.now()
@@ -73,4 +75,5 @@ class WorkDay(db.Model):
 
     def __repr__(self):
         return '<WorkDay {0}>'.format(self.id)
-"""
+
+# nanti buat jadwal juga
