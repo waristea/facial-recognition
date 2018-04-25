@@ -107,9 +107,9 @@ def api_presence_add():
         )
     else:
         presence = Presence.query.filter_by(owner=user.get_id()).order_by(Presence.time.desc()).first()
-        today = datetime.datetime.now().date
+        today = datetime.datetime.now().isocalendar()
 
-        if (presence==None or presence.time.date!=today):
+        if (presence==None or presence.time.isocalendar()!=today):
             user_id = user.get_id()
             presence = Presence(user_id)
             try:
